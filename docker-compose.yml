@@ -1,0 +1,19 @@
+version: "3.3"
+services:
+
+  frontend:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    stdin_open: true
+    container_name: react-js-card
+    restart: on-failure
+    # command: npm start
+    ports:
+      - "3000:3000"
+    volumes:
+      # - ./frontend:/front-end # local : docker path
+      - "/app/node_modules"
+      - "./:/app"
+      - "/etc/timezone:/etc/timezone:ro" # datetime fix
+      - "/etc/localtime:/etc/localtime:ro" # datetime fix
