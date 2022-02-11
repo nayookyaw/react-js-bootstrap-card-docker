@@ -1,70 +1,99 @@
 import { Component } from "react";
-import { Card, CardBody, CardText, CardTitle } from "reactstrap";
+// import { Card, CardHeader, CardBody, CardText, CardTitle } from "reactstrap";
 
-import { Dragact } from 'dragact';
+import { Container, Row, Col, Card, CardColumns,  } from "react-bootstrap";
 
 class Home extends Component {
     constructor(props) {
-        super (props);
-        this.state = {
-            fakeData : [
-                { GridX: 3, GridY: 0, w: 4, h: 2, key: '0' },
-                { GridX: 3, GridY: 0, w: 4, h: 2, key: '1' },
-                { GridX: 4, GridY: 0, w: 4, h: 2, key: '2' }
-            ],
-            height : 0,
-        }
+      super (props);
+      this.state = {
+        widthCard : 0,
+        height : 0,
+        
+        dataArr : [
+          'Primary',
+          'Secondary',
+          'Success',
+          'Danger',
+          'Warning',
+          'Info',
+          'Light',
+          'Dark',
+        ]
+      }
+
+      this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
     }
 
     componentDidMount() {
-        const height = this.CardBody.clientHeight;
-        this.setState({ height });
+      this.updateWindowDimensions();
+
+      window.addEventListener('resize', this.updateWindowDimensions);
+    }
+
+    updateWindowDimensions() {
+      let tempWidth = (window.innerWidth * 0.5) - (window.innerWidth * 0.2);
+
+      if (window.innerWidth < 700) {
+        tempWidth = window.innerWidth * 0.8;
+      }
+
+      this.setState({ widthCard: tempWidth });
     }
 
     render() {
-        const getblockStyle = (isDragging) => {
-            return {
-                background: isDragging ? '#1890ff' : 'white',
-            }
-        };
+        let { widthCard} = this.state;
 
-        return (
-            <>
-                <Dragact
-                    layout={this.state.fakeData}//必填项
-                    col={16}//必填项
-                    width={800}//必填项
-                    rowHeight={40}//必填项
-                    margin={[5, 5]}//必填项
-                    className='plant-layout'//必填项
-                    style={{ background: '#333' }}//非必填项
-                    placeholder={true}//非必填项
+        let dynamiCard = null;
+        let numRow = 2;
+
+        dynamiCard = this.state.dataArr.map((variant, idx) => (
+          <Container style={{ textAlign : '-webkit-center'}}>
+            <Row>
+              <Col>     
+                <Card
+                  bg={variant.toLowerCase()}
+                  key={idx}
+                  text={variant.toLowerCase() === "light" ? "dark" : "white"}
+                  style={{ width: widthCard }}
+                  className="mb-2"
                 >
-                    {(item, provided) => {
-                        return (
-                            <div
-                                {...provided.props}
-                                {...provided.dragHandle}
-                                style={{
-                                    ...provided.props.style,
-                                    ...getblockStyle(provided.isDragging)
-                                }}
-                            >
-                                {/* {provided.isDragging ? 'Moving..' : 'Standby'} */}
-                                <Card ref={ (divElement) => { this.divElement = divElement } }>
-                                    <CardBody>
-                                        <CardTitle>Title</CardTitle>
-                                        <CardText>
-                                            This is a wider card with supporting text below as a natural lead-in to additional content. 
-                                            This content is a little bit longer
-                                        </CardText>
-                                    </CardBody>
-                                </Card>
-                            </div>
-                        )
-                    }}
-                </Dragact>
-            </>
+                  <Card.Header>Header</Card.Header>
+                  <Card.Body>
+                    <Card.Title>{variant} Card Title </Card.Title>
+                    <Card.Text>
+                      Card Text
+                    </Card.Text>
+                  </Card.Body>
+                </Card>
+              </Col>
+
+              <Col>     
+                <Card
+                  bg={variant.toLowerCase()}
+                  key={idx}
+                  text={variant.toLowerCase() === "light" ? "dark" : "white"}
+                  style={{ width: widthCard }}
+                  className="mb-2"
+                >
+                  <Card.Header>Header</Card.Header>
+                  <Card.Body>
+                    <Card.Title>{variant} Card Title </Card.Title>
+                    <Card.Text>
+                      Card Text
+                    </Card.Text>
+                  </Card.Body>
+                </Card>
+              </Col>
+            </Row>
+          </Container>
+          )
+        );
+        
+        return (
+          <>
+            {dynamiCard}
+          </>
         )
     }
 
